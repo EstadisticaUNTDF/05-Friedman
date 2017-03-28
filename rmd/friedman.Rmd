@@ -1,0 +1,113 @@
+---
+title: "Práctico de Pruebas no paramétricas para muestras relacionadas""
+subtitle: "Test de Friedman"
+author: "Luciano Selzer"
+output: 
+  word_document:
+    fig_width: 6
+    fig_height: 6
+    fig_caption: true
+---
+
+
+```{r setup, include=FALSE}
+# Setup -------------------------------------------------------------------
+library(pander)
+library(xlsx)
+library(plyr)
+library(ggplot2)
+library(magrittr)
+library(knitr)
+library(tidyr)
+library(reshape2)
+library(agricolae)
+# opts --------------------------------------------------------------------
+
+source("../src/opts.R")
+
+# Functions ---------------------------------------------------------------
+
+### Datos --------
+
+datos <- "../data/friedman.xlsx"
+```
+
+
+## Ejemplo
+
+```{r ej}
+pasto <- read.xlsx(datos, sheetIndex = 1)
+pasto <- melt(pasto, measure.vars = 2:5, variable.name = "Pasto", value.name = "performance")
+
+out <- with(pasto, friedman.test(performance ~ Pasto | Parcela))
+out
+
+
+```
+```{r}
+out <- with(pasto, friedman(Parcela, Pasto, performance, group = FALSE, console = TRUE))
+
+```
+```{r}
+out
+```
+```{r}
+alpha <- 0.05
+c <- nrow(out$means)
+Z <- abs(qnorm(alpha/(c*(c-1))))
+r <- unique(out$means$r)
+VC <- Z * sqrt(r*c*(c+1)/6)
+VC
+```
+```{r}
+library(PMCMR)
+
+posthoc.friedman.nemenyi.test(performance ~ Pasto | Parcela, data = pasto)
+```
+```{r}
+out <- with(pasto, posthoc.friedman.conover.test(y = performance, groups = Pasto, blocks =  Parcela, p.adjust.method = "bonf"))
+summary(out)
+```
+
+## Problema 1
+
+```{r 1}
+dieta <- read.xlsx(datos, sheetIndex = 2, encoding = "UTF-8")
+dieta <- melt(dieta, measure.vars = 2:5, variable.name = "Indice", value.name = "porcentaje")
+
+out <- with(dieta, friedman(Presa, Indice, porcentaje, group = FALSE))
+pander(out)
+```
+
+## Problema 2
+
+```{r 2}
+parasitosis <- read.xlsx(datos, sheetIndex = 3, encoding = "UTF-8")
+parasitosis <- melt(parasitosis, measure.vars = 2:5, variable.name = "Droga",
+                    value.name = "helmintos")
+
+out <- with(parasitosis, friedman(Camada, Droga, helmintos, group = FALSE))
+pander(out)
+```
+
+## Problema 3
+
+```{r 3}
+soja <- read.xlsx(datos, sheetIndex = 4, encoding = "UTF-8")
+soja <- melt(soja, measure.vars = 2:5, variable.name = "Fertilizante",
+                    value.name = "produccion")
+
+out <- with(soja, friedman(Parcela, Fertilizante, produccion, group = FALSE))
+pander(out)
+```
+
+## Problema 4
+
+```{r 4}
+pesca <- read.xlsx(datos, sheetIndex = 5, encoding = "UTF-8")
+pesca <- melt(pesca, measure.vars = 2:5, variable.name = "Estacion",
+                    value.name = "Biomasa")
+
+out <- with(pesca, friedman(Barco, Estacion, Biomasa, group = FALSE))
+pander(out)
+```
