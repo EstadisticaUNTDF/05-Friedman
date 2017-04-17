@@ -71,6 +71,8 @@ summary(out)
 
 ## Problema 1
 
+Un ecólogo desea determinar si cuatro índices de importancia relativa empleados para análisis de la dieta evalúan en forma similar la importancia relativa de las presas. Para ello utilizó datos de dieta del lobo marino, calculó todos los índices y los expresó en porcentaje.  ¿Son equivalentes estos índices para estudiar la importancia relativa de las presas?. Los resultados obtenidos fueron:
+
 ```{r 1}
 dieta <- read.xlsx(datos, sheetIndex = 2, encoding = "UTF-8")
 dieta <- melt(dieta, measure.vars = 2:5, variable.name = "Indice", value.name = "porcentaje")
@@ -80,6 +82,8 @@ pander(out)
 ```
 
 ## Problema 2
+
+En un estudio veterinario se desea determinar la efectividad de distintas drogas para minimizar el nivel de parasitosis intestinales. Para ello se tomaron al azar camadas de ratones y a diferentes individuos de cada camada se les aplicó al azar una de las drogas. Posteriormente, se alimentó a los ratones con comida infestada y luego de un mes fueron sacrificados, realizándose la necropsia para determinar el número de helmintos hallados en el intestino. ¿Existe un efecto de las drogas sobre el nivel de parasitosis de los ratones? Los resultados fueron:
 
 ```{r 2}
 parasitosis <- read.xlsx(datos, sheetIndex = 3, encoding = "UTF-8")
@@ -92,6 +96,8 @@ pander(out)
 
 ## Problema 3
 
+Un ingeniero agrónomo desea determinar si cuatro fertilizantes tienen igual efecto en la producción de soja. Para ello seleccionó al azar 12 parcelas con características de suelo diferentes, aplicando al azar cada uno de los fertilizantes en distintos sectores de iguales dimensiones de cada parcela. La producción de soja en toneladas obtenida en cada parcela con cada tipo de fertilizante fue:
+
 ```{r 3}
 soja <- read.xlsx(datos, sheetIndex = 4, encoding = "UTF-8")
 soja <- melt(soja, measure.vars = 2:5, variable.name = "Fertilizante",
@@ -100,8 +106,10 @@ soja <- melt(soja, measure.vars = 2:5, variable.name = "Fertilizante",
 out <- with(soja, friedman(Parcela, Fertilizante, produccion, group = FALSE))
 pander(out)
 ```
-
+¿Cuál fertilizante conviene utilizar?
 ## Problema 4
+
+Un biólogo pesquero desea establecer si el descarte de especies asociadas (by-catch) en la pesquería de merluza varía estacionalmente. Para ello realizó un seguimiento de 12 barcos de la flota pesquera comercial, determinando para cada uno de ellos el porcentaje en biomasa del descarte realizado en cada estación del año.  ¿Existe una variación estacional en el descarte realizado por la flota merlucera? Sus resultados fueron:
 
 ```{r 4}
 pesca <- read.xlsx(datos, sheetIndex = 5, encoding = "UTF-8")
